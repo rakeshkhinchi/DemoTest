@@ -17,6 +17,7 @@ class Field extends LinearLayout {
     private int currentCircle;
     private Listener listener;
 
+
     private int score;
     private Mole mole;
 
