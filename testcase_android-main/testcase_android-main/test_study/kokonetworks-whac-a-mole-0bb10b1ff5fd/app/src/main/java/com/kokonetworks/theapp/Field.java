@@ -22,6 +22,7 @@ class Field extends LinearLayout {
 
     private final int ACTIVE_TAG_KEY = 873374234;
 
+
     public Field(Context context) {
         super(context);
         initializeViews(context);
