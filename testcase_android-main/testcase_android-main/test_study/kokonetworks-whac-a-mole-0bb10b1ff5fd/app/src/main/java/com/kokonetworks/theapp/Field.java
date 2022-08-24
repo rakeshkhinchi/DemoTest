@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -74,21 +75,35 @@ class Field extends LinearLayout {
             squareButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+
                     boolean active = (boolean) view.getTag(ACTIVE_TAG_KEY);
                     if (active) {
                         score += mole.getCurrentLevel() * 2;
+                        listener.scoreUpdate(score);
+
                     } else {
+
                         mole.stopHopping();
                         listener.onGameEnded(score);
+                        setYellowActive(view);
+
                     }
                 }
             });
         }
 
-        mole = new Mole(this);
+        mole = new Mole(this,getListener());
         mole.startHopping();
     }
 
+    public void setYellowActive( View view) {
+        mainHandler.post(() -> {
+
+            view.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.hole_yellow));
+
+        });
+    }
     public int getCurrentCircle() {
         return currentCircle;
     }
@@ -121,5 +136,7 @@ class Field extends LinearLayout {
         void onGameEnded(int score);
 
         void onLevelChange(int level);
+
+        void scoreUpdate(int score);
     }
 }

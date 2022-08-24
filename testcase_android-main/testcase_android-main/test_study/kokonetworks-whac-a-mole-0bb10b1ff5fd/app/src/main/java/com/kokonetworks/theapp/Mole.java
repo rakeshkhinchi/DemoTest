@@ -1,5 +1,8 @@
 package com.kokonetworks.theapp;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -8,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 class Mole {
     private final Field field;
+    private final Field.Listener listener;
 
     private int currentLevel = 0;
     private long startTimeForLevel;
@@ -16,9 +20,11 @@ class Mole {
 
     ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
     ScheduledFuture<?> future;
+    public int hole;
 
-    public Mole(Field field) {
+    public Mole(Field field, Field.Listener listener) {
         this.field = field;
+        this.listener=listener;
     }
 
     public void startHopping(){
@@ -28,6 +34,9 @@ class Mole {
         future = scheduledExecutorService.scheduleAtFixedRate(() -> {
             field.setActive(nextHole());
 
+           // int score = getCurrentLevel() * 2;
+          //  listener.scoreUpdate(score);
+            
             if(System.currentTimeMillis()-startTimeForLevel >= LEVEL_DURATION_MS && getCurrentLevel() < LEVELS.length){
                 nextLevel();
             }
@@ -49,10 +58,11 @@ class Mole {
     }
 
     private int nextHole(){
-        int hole = new Random().nextInt(field.totalCircles()-1);
+         hole = new Random().nextInt(field.totalCircles()-1);
         if(hole == field.getCurrentCircle()){
             return nextHole();
         }
         return hole;
+
     }
 }
